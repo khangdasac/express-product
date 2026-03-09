@@ -1,5 +1,6 @@
 const { dynamodb } = require('../config');
 const { v4: uuidv4 } = require('uuid');
+const { get } = require('../routes');
 const tableName = 'Products';
 
 const ProductModel = {
@@ -36,7 +37,7 @@ const ProductModel = {
         try {
             const res = await dynamodb.scan(params).promise();
             return res.Items;
-            
+
         } catch (error) {
             console.log("ERROR:", error);
             throw error;
@@ -45,6 +46,37 @@ const ProductModel = {
 
     update: async (id, data) => {
 
+        let updateExpression = "set #name = :name, price = :price, quantity = :quantity";
+        let expressionAttributeNames = {
+            "#name": "name"
+        };
+        let expressionAttributeValues = {
+            ":name": data.name,
+            ":price": data.price,
+            ":quantity": data.quantity
+        };
+
+        if (data.image) {
+            updateExpression += ", image = :image";
+            expressionAttributeValues[":image"] = data.image;
+        }
+
+        const params = {
+            TableName: tableName,
+            Key: { id },
+            UpdateExpression: updateExpression,
+            ExpressionAttributeNames: expressionAttributeNames,
+            ExpressionAttributeValues: expressionAttributeValues,
+            ReturnValues: "ALL_NEW"
+        };
+
+        try {
+            const res = await dynamodb.update(params).promise();
+            return res.Attributes;
+        } catch (error) {
+            console.log("ERROR: ", error);
+            throw error;
+        }
     },
 
     delete: async (id) => {
@@ -55,6 +87,19 @@ const ProductModel = {
         try {
             const res = await dynamodb.delete(params).promise();
             return true;
+        } catch (error) {
+            console.log("ERROR: ", error);
+            throw error;
+        }
+    },
+    getById: async (id) => {
+        const params = {
+            TableName: tableName,
+            Key: { id }
+        };
+        try {
+            const res = await dynamodb.get(params).promise();
+            return res.Item;
         } catch (error) {
             console.log("ERROR: ", error);
             throw error;

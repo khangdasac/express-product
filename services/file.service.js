@@ -39,4 +39,22 @@ const uploadFile = async file => {
     }
 };
 
-module.exports = { uploadFile };
+const deleteFile = async (fileUrl) => {
+    try {
+        const key = fileUrl.split("/").pop(); // lấy tên file từ URL
+
+        const params = {
+            Bucket: process.env.BUCKET_NAME,
+            Key: key
+        };
+
+        await s3.deleteObject(params).promise();
+
+        console.log("Old file deleted:", key);
+    } catch (error) {
+        console.log("Delete file error:", error);
+    }
+};
+
+
+module.exports = { uploadFile, deleteFile };

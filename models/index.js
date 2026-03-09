@@ -1,4 +1,3 @@
-const e = require('express');
 const { dynamodb } = require('../config');
 const { v4: uuidv4 } = require('uuid');
 const tableName = 'Products';
@@ -15,37 +14,52 @@ const ProductModel = {
             return { id, ...data }
         } catch (error) {
             console.log("ERROR: ", error);
+            throw error;
         }
     },
-    getAll: async() => {
+
+    search: async (keyword) => {
         const params = {
             TableName: tableName
         };
+
+        if (keyword && keyword.trim() !== "") {
+            params.FilterExpression = "contains(#name, :keyword)";
+            params.ExpressionAttributeNames = {
+                "#name": "name"
+            };
+            params.ExpressionAttributeValues = {
+                ":keyword": keyword
+            };
+        }
+
         try {
             const res = await dynamodb.scan(params).promise();
             return res.Items;
+            
         } catch (error) {
-            console.log("ERROR: ", error);
+            console.log("ERROR:", error);
+            throw error;
         }
     },
-    update: async(id, data) => {
+
+    update: async (id, data) => {
 
     },
-    delete: async(id) => {
+
+    delete: async (id) => {
         const params = {
             TableName: tableName,
-            KeyCoditionExpression: 'id = :id',
-            ExpressionAttributeValues: {
-                ':id': id
-            }
-        }
+            Key: { id }
+        };
         try {
-            const res = await dynamodb.query(params).promise();
-            return res.Items[0];
+            const res = await dynamodb.delete(params).promise();
+            return true;
         } catch (error) {
             console.log("ERROR: ", error);
+            throw error;
         }
-    },
+    }
 }
 
 module.exports = ProductModel;

@@ -17,15 +17,14 @@ const Controller = {
     create: async (req, res) => {
         try {
             const data = req.body;
+            const image = await uploadFile(req.file);
+            data.image = image;
+
             const errors = validatePayload(data, false);
             if (errors) {
                 res.send(errors.join(", "));
             }
-            const image = req.file;
-            const imageUrl = await uploadFile(image);
-
-            console.log("Received data for new product: ", data);
-            await ProductModel.create({ ...data, image: imageUrl });
+            await ProductModel.create(data);
             res.redirect("/products");
         } catch (error) {
             console.log(error);

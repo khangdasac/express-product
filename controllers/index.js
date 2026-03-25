@@ -10,7 +10,6 @@ const Controller = {
             return res.render("index", { products });
 
         } catch (error) {
-            console.log(error);
             res.status(500).send("Error getting products");
         }
     },
@@ -27,7 +26,6 @@ const Controller = {
             await ProductModel.create(data);
             res.redirect("/products");
         } catch (error) {
-            console.log(error);
             res.status(500).send("Error creating product");
         }
     },
@@ -37,7 +35,6 @@ const Controller = {
             await ProductModel.delete(id);
             res.redirect("/products");
         } catch (error) {
-            console.log(error);
             res.status(500).send("Error deleting product");
         }
     },
@@ -50,7 +47,6 @@ const Controller = {
             }
             res.render("edit", { product });
         } catch (error) {
-            console.log(error);
             res.status(500).send("Error getting product");
         }
     },
@@ -75,7 +71,6 @@ const Controller = {
             await ProductModel.update(id, { ...data, image: imageUrl });
             res.redirect("/products");
         } catch (error) {
-            console.log(error);
             res.status(500).send("Error updating product");
         }
     }

@@ -1,6 +1,6 @@
 require("dotenv").config();
 const { s3 } = require("../config");
-const { uuid } = require("uuid");
+const { v4: uuidv4 } = require('uuid');
 
 const FILE_TYPE_MATCH = [
     "image/png",
@@ -10,7 +10,7 @@ const FILE_TYPE_MATCH = [
 ];
 
 const uploadFile = async file => {
-    const filePath = uuid();
+    const filePath = uuidv4();
 
     if (FILE_TYPE_MATCH.indexOf(file.mimetype) === -1)
         throw new Error('File type is invalid');
@@ -19,7 +19,7 @@ const uploadFile = async file => {
         Bucket: process.env.BUCKET_NAME,
         Body: file.buffer,
         Key: filePath,
-        ContentType: file?.mimetype
+        ContentType: file.mimetype
     };
 
     try {

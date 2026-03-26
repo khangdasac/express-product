@@ -45,7 +45,6 @@ const ProductModel = {
     },
 
     update: async (id, data) => {
-
         let updateExpression = "set #name = :name, price = :price, quantity = :quantity";
         let expressionAttributeNames = {
             "#name": "name"
@@ -92,6 +91,7 @@ const ProductModel = {
             throw error;
         }
     },
+    
     getById: async (id) => {
         const params = {
             TableName: tableName,

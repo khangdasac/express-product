@@ -1,12 +1,12 @@
-const ProductModel = require("../models");
+const Model = require("../models");
 const { uploadFile, deleteFile } = require("../services/file.service");
-const { validatePayload } = require("../utils/validate");
+const { validatePayload } = require("../validate");
 
 const Controller = {
     search: async (req, res) => {
         try {
             const { keyword } = req.query;
-            const products = await ProductModel.search(keyword);
+            const products = await Model.search(keyword);
             return res.render("index", { products });
 
         } catch (error) {
@@ -23,17 +23,18 @@ const Controller = {
             if (errors) {
                 res.send(errors.join(", "));
             }
-            await ProductModel.create(data);
-            res.redirect("/products");
+            await Model.create(data);
+            res.redirect("/");
         } catch (error) {
+            console.error(error);
             res.status(500).send("Error creating product");
         }
     },
     delete: async (req, res) => {
         try {
             const { id } = req.params;
-            await ProductModel.delete(id);
-            res.redirect("/products");
+            await Model.delete(id);
+            res.redirect("/");
         } catch (error) {
             res.status(500).send("Error deleting product");
         }
@@ -41,21 +42,22 @@ const Controller = {
     edit: async (req, res) => {
         try {
             const { id } = req.params;
-            const product = await ProductModel.getById(id);
+            const product = await Model.getById(id);
             if (!product) {
-                return res.status(404).send("Product not found");
+                return res.status(404).send("Product not found 2");
             }
-            res.render("edit", { product });
+            res.render("/edit", { product });
         } catch (error) {
             res.status(500).send("Error getting product");
         }
     },
+    
     update: async (req, res) => {
         try {
             const { id } = req.params;
-            const product = await ProductModel.getById(id);
+            const product = await Model.getById(id);
             if (!product) {
-                return res.status(404).send("Product not found");
+                return res.status(404).send("Product not found 1");
             }
             const data = req.body;
             const errors = validatePayload(data, true);
@@ -68,8 +70,8 @@ const Controller = {
                 imageUrl = await uploadFile(image);
                 await deleteFile(product.image);
             }
-            await ProductModel.update(id, { ...data, image: imageUrl });
-            res.redirect("/products");
+            await Model.update(id, { ...data, image: imageUrl });
+            res.redirect("/");
         } catch (error) {
             res.status(500).send("Error updating product");
         }

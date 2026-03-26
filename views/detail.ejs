@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detail</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+
+<body>
+    <div class="container mt-4">
+        <h1 class="mb-4">Detail</h1>
+
+        <div class="card p-4">
+            <div class="form-group mb-3">
+                <label>ID</label>
+                <input class="form-control" type="text" value="<%= product.id %>" disabled />
+            </div>
+
+            <div class="form-group mb-3">
+                <label>Name</label>
+                <input class="form-control" type="text" value="<%= product.name %>" disabled />
+            </div>
+
+            <div class="form-group mb-3">
+                <label>Type</label>
+                <input class="form-control" type="text" value="<%= product.type %>" disabled />
+            </div>
+
+            <div class="form-group mb-3">
+                <label>Image</label><br>
+                <% if (product.image) { %>
+                    <img src="<%= product.image %>" width="150" height="150" style="object-fit:cover">
+                    <% } else { %>
+                        No Image
+                        <% } %>
+            </div>
+
+            <div class="form-group mb-3">
+                <label>Price</label>
+                <input class="form-control" type="text" value="<%= product.price %>" disabled />
+            </div>
+
+            <div class="form-group mb-3">
+                <label>Quantity</label>
+                <input class="form-control" type="text" value="<%= product.quantity %>" disabled />
+            </div>
+
+            <a href="/" class="btn btn-primary">Back</a>
+        </div>
+    </div>
+</body>
+
+</html>

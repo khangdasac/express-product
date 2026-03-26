@@ -1,49 +1,73 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Chỉnh sửa sản phẩm</title>
+    <title>Edit</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 
 <body>
     <div class="container mt-4">
-        <h1>Chỉnh sửa sản phẩm</h1>
-        <div class="form mb-4">
-            <form action="/<%= product.id %>" method="POST" enctype="multipart/form-data">
-                <div class="form-group mb-3">
-                    <label for="name" class="form-label">Tên sản phẩm</label>
-                    <input class="form-control" type="text" name="name" value="<%= product.name %>" required />
-                </div>
-                <div class="form-group mb-3">
-                    <label class="form-label">Hình ảnh hiện tại</label><br>
+        <h1>Edit</h1>
 
-                    <% if (product && product.image) { %>
-                        <img src="<%= product.image %>" width="120" style="object-fit:cover">
-                        <% } else { %>
-                            <p>Chưa có ảnh</p>
-                            <% } %>
-                </div>
+        <% if (typeof error !=='undefined' && error) { %>
+            <div class="alert alert-danger">
+                <%= error %>
+            </div>
+            <script>
+                alert("<%= error %>");
+            </script>
+            <% } %>
 
-                <div class="form-group mb-3">
-                    <label class="form-label">Chọn ảnh mới</label>
-                    <input class="form-control" type="file" name="image" />
+                <div class="form mb-4">
+                    <form action="/<%= product.id %>" method="POST" enctype="multipart/form-data">
+
+                        <div class="form-group mb-3">
+                            <label>Name</label>
+                            <input class="form-control" type="text" name="name" value="<%= product.name %>" required />
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label>Type</label>
+                            <select class="form-control" name="type" value="<%= product.type %>" required>
+                                <option value="AAA">AAA</option>
+                                <option value="BBB">BBB</option>
+                                <option value="CCC">CCC</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label>Current Image</label><br>
+                            <% if (product.image) { %>
+                                <img src="<%= product.image %>" width="120" style="object-fit:cover">
+                                <% } else { %>
+                                    <p>No Image</p>
+                                    <% } %>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label>New Image</label>
+                            <input class="form-control" type="file" name="image" />
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label>Price</label>
+                            <input class="form-control" type="number" name="price" step="0.01"
+                                value="<%= product.price %>" required />
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label>Quantity</label>
+                            <input class="form-control" type="number" name="quantity" value="<%= product.quantity %>"
+                                required />
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Save</button>
+                        <a href="/" class="btn btn-secondary ml-2">Back</a>
+                    </form>
                 </div>
-                <div class="form-group mb-3">
-                    <label class="form-label" for="price">Giá</label>
-                    <input class="form-control" type="number" name="price" step="0.01" value="<%= product.price %>"
-                        required />
-                </div>
-                <div class="form-group mb-3">
-                    <label class="form-label" for="quantity">Số lượng</label>
-                    <input class="form-control" type="number" name="quantity" value="<%= product.quantity %>"
-                        required />
-                </div>
-                <button type="submit" class="btn btn-primary">Save Changes</button>
-            </form>
-        </div>
     </div>
 </body>
 

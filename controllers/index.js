@@ -10,9 +10,34 @@ const Controller = {
             return res.render("index", { products });
 
         } catch (error) {
-            res.status(500).send("Error getting products");
+            res.render("index", { error: "Error" });
         }
     },
+
+    filter: async (req, res) => {
+        try {
+            const { type } = req.query;
+            const products = await Model.filter(type);
+            return res.render("index", { products });
+
+        } catch (error) {
+            res.render("index", { error: "Error" });
+        }
+    },
+
+    detail: async (req, res) => {
+        try {
+            const { id } = req.params;
+            const product = await Model.getById(id);
+            if (!product) {
+                return res.status(404).send("Product not found");
+            }
+            res.render("detail", { product });
+        } catch (error) {
+            res.render("index", { error: "Error" });
+        }
+    },
+
     create: async (req, res) => {
         try {
             const data = req.body;
@@ -27,7 +52,7 @@ const Controller = {
             res.redirect("/");
         } catch (error) {
             console.error(error);
-            res.status(500).send("Error creating product");
+            res.render("index", { error: "Error" });
         }
     },
     delete: async (req, res) => {
@@ -36,7 +61,7 @@ const Controller = {
             await Model.delete(id);
             res.redirect("/");
         } catch (error) {
-            res.status(500).send("Error deleting product");
+            res.render("index", { error: "Error" });
         }
     },
     edit: async (req, res) => {
@@ -46,12 +71,12 @@ const Controller = {
             if (!product) {
                 return res.status(404).send("Product not found 2");
             }
-            res.render("/edit", { product });
+            res.render("edit", { product });
         } catch (error) {
-            res.status(500).send("Error getting product");
+            res.render("index", { error: "Error" });
         }
     },
-    
+
     update: async (req, res) => {
         try {
             const { id } = req.params;
@@ -73,7 +98,8 @@ const Controller = {
             await Model.update(id, { ...data, image: imageUrl });
             res.redirect("/");
         } catch (error) {
-            res.status(500).send("Error updating product");
+            console.error(error);
+            res.render("index", { error: "Error" });
         }
     }
 };

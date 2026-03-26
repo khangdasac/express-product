@@ -1,9 +1,8 @@
 const { dynamodb } = require('../config');
 const { v4: uuidv4 } = require('uuid');
-const { get } = require('../routes');
 const tableName = 'Products';
 
-const ProductModel = {
+const Model = {
     create: async data => {
         const id = uuidv4();
         const params = {
@@ -14,7 +13,7 @@ const ProductModel = {
             await dynamodb.put(params).promise();
             return { id, ...data }
         } catch (error) {
-            console.log("ERROR: ", error);
+            console.log(error);
             throw error;
         }
     },
@@ -39,7 +38,31 @@ const ProductModel = {
             return res.Items;
 
         } catch (error) {
-            console.log("ERROR:", error);
+            console.log(error);
+            throw error;
+        }
+    },
+
+    filter: async (type) => {
+        const params = {
+            TableName: tableName
+        };
+
+        if (type && type.trim() !== "") {
+            params.FilterExpression = "#type = :type";
+            params.ExpressionAttributeNames = {
+                "#type": "type"
+            };
+            params.ExpressionAttributeValues = {
+                ":type": type
+            };
+        }
+
+        try {
+            const res = await dynamodb.scan(params).promise();
+            return res.Items;
+        } catch (error) {
+            console.log(error);
             throw error;
         }
     },
@@ -73,7 +96,7 @@ const ProductModel = {
             const res = await dynamodb.update(params).promise();
             return res.Attributes;
         } catch (error) {
-            console.log("ERROR: ", error);
+            console.log(error);
             throw error;
         }
     },
@@ -87,11 +110,11 @@ const ProductModel = {
             const res = await dynamodb.delete(params).promise();
             return true;
         } catch (error) {
-            console.log("ERROR: ", error);
+            console.log(error);
             throw error;
         }
     },
-    
+
     getById: async (id) => {
         const params = {
             TableName: tableName,
@@ -101,10 +124,10 @@ const ProductModel = {
             const res = await dynamodb.get(params).promise();
             return res.Item;
         } catch (error) {
-            console.log("ERROR: ", error);
+            console.log(error);
             throw error;
         }
     }
 }
 
-module.exports = ProductModel;
+module.exports = Model;

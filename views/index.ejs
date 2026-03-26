@@ -4,113 +4,159 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quản lý sản phẩm</title>
+    <title>Management</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 
 <body>
     <div class="container mt-4">
-        <h1 class="mb-4">Quản lý sản phẩm</h1>
-        <div class="form mb-4">
-            <form action="/" method="post" enctype="multipart/form-data">
-                <div class="form-group mb-3">
-                    <label for="name" class="form-label">Tên sản phẩm</label>
-                    <input class="form-control" type="text" name="name" required />
-                </div>
-                <div class="form-group mb-3">
-                    <label class="form-label" for="image">Hình ảnh</label>
-                    <input class="form-control" type="file" name="image" required />
-                </div>
-                <div class="form-group mb-3">
-                    <label class="form-label" for="price">Giá</label>
-                    <input class="form-control" type="number" name="price" step="0.01" required />
-                </div>
-                <div class="form-group mb-3">
-                    <label class="form-label" for="quantity">Số lượng</label>
-                    <input class="form-control" type="number" name="quantity" required />
-                </div>
-                <button type="submit" class="btn btn-primary">Thêm sản phẩm</button>
-            </form>
-        </div>
-        <form class="form-inline mb-3" action="/products" method="GET">
-            <input type="text" name="keyword" id="searchInput" class="form-control mr-2"
-                placeholder="Tìm theo tên sản phẩm">
-            <button type="submit" class="btn btn-primary">Search</button>
-            <a href="/products" class="btn btn-secondary ml-2">
-                Reset
-            </a>
-        </form>
+        <h1 class="mb-4">Management</h1>
 
-        <table class="table table-bordered table-striped">
-            <thead class="thead-dark">
-                <tr>
-                    <th>ID</th>
-                    <th>Tên sản phẩm</th>
-                    <th>Hình ảnh</th>
-                    <th>Giá</th>
-                    <th>Số lượng</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <% if (products && products.length) { %>
-                    <% products.forEach(function(product) { %>
+        <% if (typeof error !== 'undefined' && error) { %>
+            <div class="alert alert-danger">
+                <%= error %>
+            </div>
+            <script>
+                alert("<%= error %>");
+            </script>
+            <% } %>
+
+                <div class="form mb-4">
+                    <form action="/" method="post" enctype="multipart/form-data">
+                        <div class="form-group mb-3">
+                            <label>Name</label>
+                            <input class="form-control" type="text" name="name" required />
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label>Type</label>
+                            <select class="form-control" name="type" required>
+                                <option value="AAA">AAA</option>
+                                <option value="BBB">BBB</option>
+                                <option value="CCC">CCC</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label>Image</label>
+                            <input class="form-control" type="file" name="image" required />
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label>Price</label>
+                            <input class="form-control" type="number" name="price" step="0.01" required />
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label>Quantity</label>
+                            <input class="form-control" type="number" name="quantity" required />
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Add</button>
+                    </form>
+                </div>
+
+                <form class="form-inline mb-3" action="/" method="GET">
+                    <input type="text" name="keyword" id="searchInput" class="form-control mr-2"
+                        placeholder="Search by product name">
+                    <button type="submit" class="btn btn-primary">Search</button>
+                    <a href="/" class="btn btn-secondary ml-2">Reset</a>
+                </form>
+
+                <form class="form-inline mb-3" action="/filter" method="GET">
+                    <select name="type" id="typeFilter" class="form-control mr-2">
+                        <option value="">All</option>
+                        <option value="AAA">AAA</option>
+                        <option value="BBB">BBB</option>
+                        <option value="CCC">CCC</option>
+                    </select>
+                    <button type="submit" class="btn btn-primary">Filter</button>
+                    <a href="/" class="btn btn-secondary ml-2">Reset</a>
+                </form>
+
+                <table class="table table-bordered table-striped">
+                    <thead class="thead-dark">
                         <tr>
-                            <td>
-                                <%= product.id %>
-                            </td>
-                            <td>
-                                <%= product.name %>
-                            </td>
-                            <td>
-                                <% if (product.image) { %>
-                                    <img src="<%= product.image %>" width="80" height="80" style="object-fit:cover">
-                                    <% } else { %>
-                                        No Image
-                                        <% } %>
-                            </td>
-                            <td>$<%= product.price %>
-                            </td>
-                            <td>
-                                <%= product.quantity %>
-                            </td>
-                            <td>
-                                <a href="/<%= product.id %>" class="btn btn-primary btn-sm">
-                                    Edit
-                                </a>
-                                <form action="/delete/<%= product.id %>" method="POST" style="display:inline;"
-                                    onsubmit="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này?');">
-                                    <button type="submit" class="btn btn-danger btn-sm">
-                                        Delete
-                                    </button>
-                                </form>
-                            </td>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Type</th>
+                            <th>Image</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Actions</th>
                         </tr>
-                        <% }) %>
-                            <% } else { %>
+                    </thead>
+
+                    <tbody>
+                        <% if (products && products.length) { %>
+                            <% products.forEach(function(product) { %>
                                 <tr>
-                                    <td colspan="7" class="text-center">
-                                        No products found
+                                    <td>
+                                        <%= product.id %>
+                                    </td>
+                                    <td>
+                                        <%= product.name %>
+                                    </td>
+                                    <td>
+                                        <%= product.type %>
+                                    </td>
+
+                                    <td>
+                                        <% if (product.image) { %>
+                                            <img src="<%= product.image %>" width="80" height="80"
+                                                style="object-fit:cover">
+                                            <% } else { %>
+                                                No Image
+                                                <% } %>
+                                    </td>
+
+                                    <td>$<%= product.price %>
+                                    </td>
+                                    <td>
+                                        <%= product.quantity %>
+                                    </td>
+
+                                    <td>
+                                        <a href="/detail/<%= product.id %>" class="btn btn-primary btn-sm">
+                                            Detail
+                                        </a>
+                                        <a href="/<%= product.id %>" class="btn btn-warning btn-sm">
+                                            Edit
+                                        </a>
+
+                                        <form action="/delete/<%= product.id %>" method="POST" style="display:inline;"
+                                            onsubmit="return confirm('Are you sure you want to delete?');">
+                                            <button type="submit" class="btn btn-danger btn-sm">
+                                                Delete
+                                            </button>
+                                        </form>
                                     </td>
                                 </tr>
-                                <% } %>
-            </tbody>
-        </table>
+                                <% }) %>
+                                    <% } else { %>
+                                        <tr>
+                                            <td colspan="7" class="text-center">
+                                                No found
+                                            </td>
+                                        </tr>
+                                        <% } %>
+                    </tbody>
+                </table>
     </div>
 
-
     <script>
-
         const params = new URLSearchParams(window.location.search);
         const keyword = params.get("keyword");
+        const type = params.get("type");
 
         if (keyword) {
             document.getElementById("searchInput").value = keyword;
         }
 
+        if (type) {
+            document.getElementById("typeFilter").value = type;
+        }
     </script>
-
-
 </body>
 
 </html>

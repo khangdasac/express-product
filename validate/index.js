@@ -18,7 +18,7 @@ const validatePayload = (payload, isUpdate) => {
         errors.push("Số lượng không hợp lệ");
     }
 
-    if (errors?.length > 0) {
+    if (errors.length > 0) {
         return errors;
     }
 

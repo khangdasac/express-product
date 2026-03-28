@@ -3,7 +3,7 @@ const { v4: uuidv4 } = require('uuid');
 const tableName = 'Products';
 
 const Model = {
-    create: async data => {
+    create: async (data) => {
         const id = uuidv4();
         const params = {
             TableName: tableName,
@@ -48,7 +48,7 @@ const Model = {
             TableName: tableName
         };
 
-        if (type && type.trim() !== "") {
+        if (type) {
             params.FilterExpression = "#type = :type";
             params.ExpressionAttributeNames = {
                 "#type": "type"
@@ -68,16 +68,6 @@ const Model = {
     },
 
     update: async (id, data) => {
-        let updateExpression = "set #name = :name, price = :price, quantity = :quantity";
-        let expressionAttributeNames = {
-            "#name": "name"
-        };
-        let expressionAttributeValues = {
-            ":name": data.name,
-            ":price": data.price,
-            ":quantity": data.quantity
-        };
-
         if (data.image) {
             updateExpression += ", image = :image";
             expressionAttributeValues[":image"] = data.image;
@@ -86,9 +76,15 @@ const Model = {
         const params = {
             TableName: tableName,
             Key: { id },
-            UpdateExpression: updateExpression,
-            ExpressionAttributeNames: expressionAttributeNames,
-            ExpressionAttributeValues: expressionAttributeValues,
+            UpdateExpression: "set #name = :name, price = :price, quantity = :quantity",
+            ExpressionAttributeNames: {
+                "#name": "name"
+            },
+            ExpressionAttributeValues: {
+                ":name": data.name,
+                ":price": data.price,
+                ":quantity": data.quantity
+            },
             ReturnValues: "ALL_NEW"
         };
 

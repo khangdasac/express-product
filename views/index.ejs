@@ -12,13 +12,10 @@
     <div class="container mt-4">
         <h1 class="mb-4">Management</h1>
 
-        <% if (typeof error !== 'undefined' && error) { %>
-            <div class="alert alert-danger">
-                <%= error %>
+        <% if (typeof message !=='undefined' ) { %>
+            <div class="alert alert-<%= message.type %> alert-dismissible fade show" role="alert">
+                <%= message.text %>
             </div>
-            <script>
-                alert("<%= error %>");
-            </script>
             <% } %>
 
                 <div class="form mb-4">

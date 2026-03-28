@@ -10,7 +10,8 @@ const Controller = {
             return res.render("index", { items });
 
         } catch (error) {
-            res.render("index", { error: "Error" });
+            req.session.message = { type: "danger", text: "Error" };
+            return res.redirect("/");
         }
     },
 
@@ -21,7 +22,8 @@ const Controller = {
             return res.render("index", { items });
 
         } catch (error) {
-            res.render("index", { error: "Error" });
+            req.session.message = { type: "danger", text: "Error" };
+            return res.redirect("/");
         }
     },
 
@@ -30,11 +32,13 @@ const Controller = {
             const { id } = req.params;
             const item = await Model.getById(id);
             if (!item) {
-                return res.status(404).send("Item not found");
+                req.session.message = { type: "warning", text: "Not found" };
+                return res.redirect("/");
             }
             res.render("detail", { item });
         } catch (error) {
-            res.render("index", { error: "Error" });
+            req.session.message = { type: "danger", text: "Error" };
+            return res.redirect("/");
         }
     },
 
@@ -46,13 +50,19 @@ const Controller = {
 
             const errors = validatePayload(data, false);
             if (errors) {
-                res.send(errors.join(", "));
+                req.session.message = {
+                    type: "danger",
+                    text: errors.join(", ")
+                };
+                return res.redirect("/");
             }
             await Model.create(data);
+            req.session.message = { type: "success", text: "Successfully" };
             res.redirect("/");
         } catch (error) {
             console.error(error);
-            res.render("index", { error: "Error" });
+            req.session.message = { type: "danger", text: "Error" };
+            res.redirect("/");
         }
     },
 
@@ -64,22 +74,26 @@ const Controller = {
                 await deleteFile(item.image);
             }
             await Model.delete(id);
+            req.session.message = { type: "success", text: "Successfully" };
             res.redirect("/");
         } catch (error) {
-            res.render("index", { error: "Error" });
+            req.session.message = { type: "danger", text: "Error" };
+            res.redirect("/");
         }
     },
-    
+
     edit: async (req, res) => {
         try {
             const { id } = req.params;
             const item = await Model.getById(id);
             if (!item) {
-                return res.status(404).send("Item not found");
+                req.session.message = { type: "warning", text: "Not found" };
+                return res.redirect("/");
             }
             res.render("edit", { item });
         } catch (error) {
-            res.render("index", { error: "Error" });
+            req.session.message = { type: "danger", text: "Error" };
+            return res.redirect("/");
         }
     },
 
@@ -88,24 +102,28 @@ const Controller = {
             const { id } = req.params;
             const item = await Model.getById(id);
             if (!item) {
-                return res.status(404).send("Item not found");
+                req.session.message = { type: "warning", text: "Not found" };
+                return res.redirect("/");
             }
             const data = req.body;
             const errors = validatePayload(data, true);
             if (errors) {
-                res.send(errors.join(", "));
+                req.session.message = { type: "danger", text: errors.join(", ") };
+                return res.redirect("/" + id);
             }
             const image = req.file;
-            let imageUrl;
+            let imageUrl = item.image;
             if (image) {
                 imageUrl = await uploadFile(image);
                 await deleteFile(item.image);
             }
             await Model.update(id, { ...data, image: imageUrl });
+            req.session.message = { type: "success", text: "Successfully" };
             res.redirect("/");
         } catch (error) {
             console.error(error);
-            res.render("index", { error: "Error" });
+            req.session.message = { type: "danger", text: "Error" };
+            res.redirect("/");
         }
     }
 };

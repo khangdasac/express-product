@@ -19,51 +19,47 @@ const Model = {
     },
 
     search: async (keyword) => {
-        const params = {
-            TableName: tableName
-        };
-
-        if (keyword && keyword.trim() !== "") {
-            params.FilterExpression = "contains(#name, :keyword)";
-            params.ExpressionAttributeNames = {
-                "#name": "name"
+        if (keyword && keyword.trim()) {
+            const params = {
+                TableName: tableName,
+                FilterExpression: "contains(#name, :keyword)",
+                ExpressionAttributeNames: {
+                    "#name": "name"
+                },
+                ExpressionAttributeValues: {
+                    ":keyword": keyword
+                }
             };
-            params.ExpressionAttributeValues = {
-                ":keyword": keyword
-            };
-        }
+            try {
+                const res = await dynamodb.scan(params).promise();
+                return res.Items;
 
-        try {
-            const res = await dynamodb.scan(params).promise();
-            return res.Items;
-
-        } catch (error) {
-            console.log(error);
-            throw error;
+            } catch (error) {
+                console.log(error);
+                throw error;
+            }
         }
     },
 
     filter: async (type) => {
-        const params = {
-            TableName: tableName
-        };
-
         if (type) {
-            params.FilterExpression = "#type = :type";
-            params.ExpressionAttributeNames = {
-                "#type": "type"
+            const params = {
+                TableName: tableName,
+                FilterExpression: "#type = :type",
+                ExpressionAttributeNames: {
+                    "#type": "type"
+                },
+                ExpressionAttributeValues: {
+                    ":type": type
+                }
             };
-            params.ExpressionAttributeValues = {
-                ":type": type
-            };
-        }
-
-        try {
-            const res = await dynamodb.scan(params).promise();
-            return res.Items;
-        } catch (error) {
-            console.log(error);
-            throw error;
+            try {
+                const res = await dynamodb.scan(params).promise();
+                return res.Items;
+            } catch (error) {
+                console.log(error);
+                throw error;
+            }
         }
     },
 

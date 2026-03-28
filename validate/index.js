@@ -1,6 +1,7 @@
 const validatePayload = (payload, isUpdate) => {
-    const { name, image, price, quantity } = payload;
+    const { name, image, price, quantity, type } = payload;
     const errors = [];
+    const validTypes = ["AAA", "BBB", "CCC"];
 
     if (!name) {
         errors.push("Tên sản phẩm không được để trống");
@@ -8,6 +9,10 @@ const validatePayload = (payload, isUpdate) => {
 
     if (!image && !isUpdate) {
         errors.push("Hình ảnh không được để trống");
+    }
+
+    if (!type || !validTypes.includes(type)) {
+        errors.push("Loại sản phẩm không hợp lệ");
     }
 
     if (!price || isNaN(price) || parseFloat(price) <= 0) {

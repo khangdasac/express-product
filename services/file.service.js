@@ -28,7 +28,7 @@ const uploadFile = async file => {
 
         return fileName;
     } catch (error) {
-        throw new Error('Error uploading file to AWS S3');
+        throw new Error("Error");
     }
 };
 
@@ -43,7 +43,7 @@ const deleteFile = async (fileUrl) => {
 
         await s3.deleteObject(params).promise();
     } catch (error) {
-        throw new Error('Error deleting file from AWS S3');
+        throw new Error("Error");
     }
 };
 

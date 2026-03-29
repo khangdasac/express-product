@@ -38,7 +38,7 @@
                         <div class="form-group mb-3">
                             <label>Current Image</label><br>
                             <% if (item.image) { %>
-                                <img src="<%= item.image %>" width="120" style="object-fit:cover">
+                                <img src="<%= item.image %>" width="200" style="object-fit:cover">
                                 <% } else { %>
                                     <p>No Image</p>
                                     <% } %>
@@ -46,7 +46,7 @@
 
                         <div class="form-group mb-3">
                             <label>New Image</label>
-                            <input class="form-control" type="file" name="image" />
+                            <input class="form-control" type="file" name="image" accept="image/*" />
                         </div>
 
                         <div class="form-group mb-3">

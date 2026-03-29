@@ -67,6 +67,18 @@ const Model = {
     },
 
     update: async (id, data) => {
+        let updateExpression = "set #name = :name, price = :price, quantity = :quantity, #type = :type";
+        let expressionAttributeNames = {
+            "#name": "name",
+            "#type": "type"
+        };
+        let expressionAttributeValues = {
+            ":name": data.name,
+            ":price": data.price,
+            ":quantity": data.quantity,
+            ":type": data.type
+        };
+
         if (data.image) {
             updateExpression += ", image = :image";
             expressionAttributeValues[":image"] = data.image;
@@ -75,15 +87,9 @@ const Model = {
         const params = {
             TableName: tableName,
             Key: { id },
-            UpdateExpression: "set #name = :name, price = :price, quantity = :quantity",
-            ExpressionAttributeNames: {
-                "#name": "name"
-            },
-            ExpressionAttributeValues: {
-                ":name": data.name,
-                ":price": data.price,
-                ":quantity": data.quantity
-            },
+            UpdateExpression: updateExpression,
+            ExpressionAttributeNames: expressionAttributeNames,
+            ExpressionAttributeValues: expressionAttributeValues,
             ReturnValues: "ALL_NEW"
         };
 

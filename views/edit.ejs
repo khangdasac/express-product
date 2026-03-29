@@ -28,10 +28,10 @@
 
                         <div class="form-group mb-3">
                             <label>Type</label>
-                            <select class="form-control" name="type" value="<%= item.type %>" required>
-                                <option value="AAA">AAA</option>
-                                <option value="BBB">BBB</option>
-                                <option value="CCC">CCC</option>
+                            <select class="form-control" name="type" required>
+                                <option value="AAA" <%=item.type==='AAA' ? 'selected' : '' %>>AAA</option>
+                                <option value="BBB" <%=item.type==='BBB' ? 'selected' : '' %>>BBB</option>
+                                <option value="CCC" <%=item.type==='CCC' ? 'selected' : '' %>>CCC</option>
                             </select>
                         </div>
 
